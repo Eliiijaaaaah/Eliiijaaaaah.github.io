@@ -28,6 +28,7 @@
 						<a href="#rss" class="icon fa-rss"><span>RSS Feed</span></a>
 						<a href="#contact" class="icon fa-envelope"><span>Contact</span></a>
 						<a href="#twitter" class="icon fa-twitter"><span>Twitter</span></a>
+                        <a href="#play" class="icon fa-play"></a>
 					</nav>
 
 				<!-- Main -->
@@ -41,7 +42,7 @@
 									The podcast of the generation
 									<br/>
 									<br/>
-									<audio controls><source src="audio/Episode01.mp3"/></audio>
+									<audio controls id="#audio"><source src="audio/Episode01.mp3"/></audio>
 									</p>
 									
 								</header>
@@ -115,6 +116,22 @@
 			</div>
 
 		<!-- Scripts -->
+        
+<script type = "JavaScript">
+    $(function() {
+     $(".play").click(function(e) {
+       e.preventDefault();
+
+       // This next line will get the audio element
+       // that is adjacent to the link that was clicked.
+       var song = $(this).next('audio').get(0);
+       if (song.paused)
+         song.play();
+       else
+         song.pause();
+     });
+   });
+</script>
 
 <script language="JavaScript">
 var frmvalidator  = new Validator("contactform");
