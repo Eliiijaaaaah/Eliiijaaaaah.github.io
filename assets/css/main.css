@@ -746,6 +746,11 @@
 
 /* Basic */
 
+	.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
 	body {
 		background-image: url("images/overlay.png"), url("images/bg.jpg");
 		background-repeat: repeat, no-repeat;

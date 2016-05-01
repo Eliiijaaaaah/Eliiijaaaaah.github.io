@@ -15,6 +15,12 @@
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/skel.min.js"></script>
+		<script src="assets/js/skel-viewport.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="assets/js/main.js"></script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 	</head>
 	<body>
@@ -28,7 +34,8 @@
 						<a href="#rss" class="icon fa-rss"><span>RSS Feed</span></a>
 						<a href="#contact" class="icon fa-envelope"><span>Contact</span></a>
 						<a href="#twitter" class="icon fa-twitter"><span>Twitter</span></a>
-                        <a href="#play" class="icon fa-play"></a>
+                        <a id="play" class="icon fa-play"><span>Play</span></a>
+                        <a id="pause" class="icon fa-pause hidden"><span>Pause</span></a>
 					</nav>
 
 				<!-- Main -->
@@ -42,7 +49,7 @@
 									The podcast of the generation
 									<br/>
 									<br/>
-									<audio controls id="#audio"><source src="audio/Episode01.mp3"/></audio>
+									<audio controls id="player"><source src="audio/Episode01.mp3"/></audio>						
 									</p>
 									
 								</header>
@@ -117,20 +124,23 @@
 
 		<!-- Scripts -->
         
-<script type = "JavaScript">
-    $(function() {
-     $(".play").click(function(e) {
-       e.preventDefault();
+<script type="text/javascript">
+$(document).ready(function() {
+  var playing = false;
 
-       // This next line will get the audio element
-       // that is adjacent to the link that was clicked.
-       var song = $(this).next('audio').get(0);
-       if (song.paused)
-         song.play();
-       else
-         song.pause();
-     });
-   });
+  $('a#play').click(function() {
+      $(this).toggleClass("hidden");
+      $("a#pause").toggleClass("hidden");
+      document.getElementById('player').play();
+  });
+
+  $('a#pause').click(function() {
+      $(this).toggleClass("hidden");
+      $("a#play").toggleClass("hidden");
+      document.getElementById('player').pause();
+  });
+
+});
 </script>
 
 <script language="JavaScript">
@@ -140,13 +150,6 @@ frmvalidator.addValidation("email","req","Please provide your email");
 frmvalidator.addValidation("email","email",
   "Please enter a valid email address");
 </script>
-
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/skel-viewport.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
 
 	</body>
 </html>
