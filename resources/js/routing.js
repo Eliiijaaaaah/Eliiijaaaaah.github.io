@@ -7,7 +7,8 @@ function $id(id) {
 // then set its contents to the html of the parent element
 function loadHTML(url, id) {
   req = new XMLHttpRequest();
-  req.open('GETJSON', url);
+  req.open('GET', url);
+	console.log(req);
   req.send();
   req.onload = () => {
     $id(id).innerHTML = req.responseText;
@@ -15,7 +16,7 @@ function loadHTML(url, id) {
 }
 
 // use #! to hash
-router = new Navigo(null, true, '#');
+router = new Navigo('/home', true, '#');
 router.on({
   // 'view' is the id of the div element inside which we render the HTML
   'firstroute': () => { loadHTML('./pages/home.html', 'view'); },
@@ -29,8 +30,8 @@ router.on('/about', function () {
 		loadHTML('./pages/about.html', 'view');
   }).resolve();
 
-router.on('home', function () {
-    // display about page
+router.on('/home', function () {
+    // display home page
 		loadHTML('./pages/home.html', 'view');
   }).resolve();
 
