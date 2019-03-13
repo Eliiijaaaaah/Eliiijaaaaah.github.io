@@ -17,13 +17,10 @@ function loadHTML(url, id) {
 
 // use #! to hash
 router = new Navigo('/home', true, '#');
-router.on({
+router.on(function(){
   // 'view' is the id of the div element inside which we render the HTML
-  'firstroute': () => { loadHTML('./pages/home.html', 'view'); },
+  loadHTML('./pages/home.html', 'view');
 });
-
-// set the default route
-router.on(() => { $id('view').innerHTML = '<h2>Here by default</h2>'; });
 
 router.on('/about', function () {
     // display about page
