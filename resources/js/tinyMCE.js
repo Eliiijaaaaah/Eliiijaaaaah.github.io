@@ -9,7 +9,7 @@ function tinymceInit(){
 }
 
 function tinymceSubmit(){
-	firebase.database().ref('/HTML/' + 'Index').set({
+	firebase.database().ref('/HTML/' + $("#editPage").val()).set({
 		name: 'Index',
 		HTML: tinyMCE.activeEditor.getContent()
 	})
