@@ -37,3 +37,20 @@ function FirebaseLogin(){
 	  var errorMessage = error.message;
 	});
 }
+
+function Alert(title, msg, timeout){
+	req = new XMLHttpRequest();
+  req.open('GET', './pages/alert.html');
+  req.send();
+  req.onload = () => {
+    var html = req.responseText;
+		html.replace('@title', title).replace('@msg', msg);
+		console.log(html);
+		
+		$id('alert').innerHTML = html;
+  };
+
+	setTimeout(function(){
+		$('.alert').alert('close')
+	}, timeout);
+}

@@ -15,13 +15,12 @@ function loadHTML(url, id) {
   req.send();
   req.onload = () => {
     $id(id).innerHTML = req.responseText;
-		tinymceInit();
   };
 }
 
 function loadFirebaseData(){
 	firebase.database().ref('/HTML/' + currentPage).once('value').then(function(snapshot) {
-	  $id('view').innerHTML = snapshot.val().HTML;
+	  	$id('content').innerHTML = snapshot.val().HTML;
 	});
 }
 
@@ -37,28 +36,30 @@ function navbarActive(){
 function createRoutes(){
 	router = new Navigo(null, true, '#');
 	router.on('/', function () {
-	    // display home page
+			// track navigation
 			currentPage = 'home';
-			loadFirebaseData();
+			// update navbar
 			navbarActive();
+	    // display home page
+			$.when(loadHTML('./pages/home.html', 'view')).then(loadFirebaseData());
 	  }).resolve();
 
 	router.on('/about', function () {
-	    // display about page
-			//loadHTML('./pages/about.html', 'view');
-			//$id('view').innerHTML = loadFirebaseData('About');
-			currentPage = 'about';
-			loadFirebaseData();
-			navbarActive();
+		// track navigation
+		currentPage = 'about';
+		// update navbar
+		navbarActive();
+		// display home page
+		$.when(loadHTML('./pages/about.html', 'view')).then(loadFirebaseData());
 	  }).resolve();
 
 	router.on('/home', function () {
-	    // display home page
-			//loadHTML('./pages/home.html', 'view');
-			//$id('view').innerHTML = loadFirebaseData('Index');
-			currentPage = 'home';
-			navbarActive();
-			loadFirebaseData();
+		// track navigation
+		currentPage = 'home';
+		// update navbar
+		navbarActive();
+		// display home page
+		$.when(loadHTML('./pages/home.html', 'view')).then(loadFirebaseData());
 	  }).resolve();
 
 	router.on('/edit', function () {
@@ -67,6 +68,7 @@ function createRoutes(){
 
 			if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
 				loadHTML('./pages/edit.html', 'view');
+				tinymceInit();
 			}
 			else{
 				loadHTML('./pages/login.html', 'view');
