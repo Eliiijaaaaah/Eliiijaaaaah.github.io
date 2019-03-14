@@ -1,4 +1,7 @@
-FirebaseInit();
+$('document').ready(function(){
+	FirebaseInit();
+	createRoutes();
+});
 
 function FirebaseInit(){
 	var config = {
@@ -9,6 +12,7 @@ function FirebaseInit(){
 		storageBucket: "eliiijaaaaah.appspot.com",
 		messagingSenderId: "290384527697"
 	};
+
 	firebase.initializeApp(config);
 }
 

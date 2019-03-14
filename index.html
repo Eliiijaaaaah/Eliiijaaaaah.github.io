@@ -3,9 +3,17 @@
 		<link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico" />
 		<title>Elijah T. Davis</title>
 
-    <!-- Style Sheets -->
+    	<!-- Font Awesome -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+			<!-- Bootstrap
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+			<!-- JS, Popper.js, and jQuery -->
+			<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 			<!-- JQuery -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -18,44 +26,39 @@
 			<!-- Google Firebase -->
 			<script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
 
-			<!-- Global JS -->
-			<script src="resources/js/global.js"></script>
-
 			<!-- Router -->
 			<script src="https://unpkg.com/navigo@6"></script>
 			<script src="resources/js/routing.js"></script>
 
+			<!-- Global JS -->
+			<script src="resources/js/global.js"></script>
 	</head>
 
 	<body>
-		<nav class="navbar navbar-inverse navbar-static-top">
-		<div class="container">
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<div class="container">
+				<a class="navbar-brand h1" onclick="changePage('/home')" data-navigo>Elijah Davis</a>
 
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" onclick="changePage('/home')" data-navigo>Elijah Davis</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav mr-auto">
+						<li id='home' class='active nav-item'><a onclick="changePage('/home')" data-navigo class="nav-link">Home</a></li>
+						<li id='about' class="nav-item"><a onclick="changePage('/about')" data-navigo class="nav-link">About</a></li>
+					</ul>
+
+					<ul class="navbar-nav list-group-horizontal">
+						<li class="nav-item"><a class="fa fa-facebook-official fa-lg nav-link mr-3" href="https://www.facebook.com/5davise"></a></li>
+						<li class="nav-item"><a class="fa fa-youtube-play fa-lg nav-link mr-3" href="https://www.youtube.com/tripleebattery"></a></li>
+						<li class="nav-item"><a class="fa fa-linkedin fa-lg nav-link mr-3" href="https://www.linkedin.com/in/eliiijaaaaah/"></a></li>
+					</ul>
+				</div>
 			</div>
+		</nav>
 
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li id='home'><a onclick="changePage('/home')" data-navigo>Home</a></li>
-					<li id='about'><a onclick="changePage('/about')" data-navigo>About</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li><a class="fa fa-facebook-official fa-lg" href="https://www.facebook.com/5davise"></a></li>
-					<li><a class="fa fa-youtube-play fa-lg" href="https://www.youtube.com/tripleebattery"></a></li>
-					<li><a class="fa fa-linkedin fa-lg" href="https://www.linkedin.com/in/eliiijaaaaah/"></a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-
-	<div id='view'></div>
+		<div id='view'></div>
 
 	</body>
 </html>
