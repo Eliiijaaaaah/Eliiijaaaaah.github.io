@@ -43,10 +43,10 @@ function Alert(title, msg, timeout){
   req.open('GET', './pages/alert.html');
   req.send();
   req.onload = () => {
-    var html = req.responseText;
-		html.replace('@title', title).replace('@msg', msg);
+    var html = "" + req.responseText;
+		html = html.replace('@title', title).replace('@msg', msg);;
 		console.log(html);
-		
+
 		$id('alert').innerHTML = html;
   };
 
