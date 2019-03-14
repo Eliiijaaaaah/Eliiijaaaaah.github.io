@@ -1,6 +1,7 @@
 // Routing based on: https://github.com/krasimir/navigo
 var currentPage;
-var pages = ["home", "about"];
+var previousPage;
+var pages = ["home", "about", "edit", "login", "logout"];
 
 // getElementById wrapper
 function $id(id) {
@@ -15,6 +16,8 @@ function loadHTML(url, id) {
   req.send();
   req.onload = () => {
     $id(id).innerHTML = req.responseText;
+		loadFirebaseData();
+		tinymceInit();
   };
 }
 
@@ -37,38 +40,41 @@ function createRoutes(){
 	router = new Navigo(null, true, '#');
 	router.on('/', function () {
 			// track navigation
+			previousPage = currentPage;
 			currentPage = 'home';
 			// update navbar
 			navbarActive();
 	    // display home page
-			$.when(loadHTML('./pages/home.html', 'view')).then(loadFirebaseData());
+			loadHTML('./pages/home.html', 'view');
 	  }).resolve();
 
 	router.on('/about', function () {
 		// track navigation
+		previousPage = currentPage;
 		currentPage = 'about';
 		// update navbar
 		navbarActive();
 		// display home page
-		$.when(loadHTML('./pages/about.html', 'view')).then(loadFirebaseData());
+		loadHTML('./pages/about.html', 'view');
 	  }).resolve();
 
 	router.on('/home', function () {
 		// track navigation
+		previousPage = currentPage;
 		currentPage = 'home';
 		// update navbar
 		navbarActive();
 		// display home page
-		$.when(loadHTML('./pages/home.html', 'view')).then(loadFirebaseData());
+		loadHTML('./pages/home.html', 'view');
 	  }).resolve();
 
 	router.on('/edit', function () {
+			previousPage = currentPage;
 			currentPage = 'edit';
 			navbarActive();
 
 			if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
 				loadHTML('./pages/edit.html', 'view');
-				tinymceInit();
 			}
 			else{
 				loadHTML('./pages/login.html', 'view');
@@ -76,17 +82,19 @@ function createRoutes(){
 	  }).resolve();
 
 	router.on('/login', function () {
+			previousPage = currentPage;
 			currentPage = 'login';
 			navbarActive();
 			if(firebase.auth().currentUser == null){
 				loadHTML('./pages/login.html', 'view');
 			}
 			else{
-				setTimeout(function(){$id('view').innerHTML = 'Already logged in.';}, 200);
+				window.location = "#/"+previousPage;
 			}
 	  }).resolve();
 
 		router.on('/logout', function () {
+				previousPage = currentPage;
 				currentPage = 'logout';
 				navbarActive();
 		    FirebaseLogout();

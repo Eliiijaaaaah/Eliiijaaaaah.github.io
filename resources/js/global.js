@@ -30,7 +30,7 @@ function FirebaseLogout(){
 function FirebaseLogin(){
 	firebase.auth().signInWithEmailAndPassword($('#username').val(), $('#password').val()).then(function(){
 		// TODO: Success
-		window.location = '#/home';
+		window.location = '#/login';
 	}).catch(function(error) {
 	  // Handle Errors here.
 	  var errorCode = error.code;
@@ -43,7 +43,7 @@ function Alert(title, msg, timeout){
   req.open('GET', './pages/alert.html');
   req.send();
   req.onload = () => {
-    var html = "" + req.responseText;
+    var html = req.responseText;
 		html = html.replace('@title', title).replace('@msg', msg);;
 		console.log(html);
 
