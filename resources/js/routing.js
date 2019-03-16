@@ -1,7 +1,7 @@
 // Routing based on: https://github.com/krasimir/navigo
 var currentPage;
 var previousPage;
-var pages = ["home", "about", "edit", "login", "logout"];
+var pages = ["home", "about", "edit", "login", "logout", "projects"];
 
 // getElementById wrapper
 function $id(id) {
@@ -17,14 +17,17 @@ function loadHTML(url, id) {
   req.onload = function() {
     $id(id).innerHTML = req.responseText;
 		loadFirebaseData();
-		tinymceInit();
   };
 }
 
 function loadFirebaseData(){
-	firebase.database().ref('/HTML/' + currentPage).once('value').then(function(snapshot) {
-	  	$id('content').innerHTML = snapshot.val().HTML;
-	});
+	if($id('content') != null){
+		firebase.database().ref('/HTML/' + currentPage).once('value').then(function(snapshot) {
+			if(snapshot.val() != null){
+		  	$id('content').innerHTML = snapshot.val().HTML;
+			}
+		});
+	}
 }
 
 function navbarActive(){
@@ -58,6 +61,16 @@ function createRoutes(){
 		loadHTML('./pages/about.html', 'view');
 	  }).resolve();
 
+		router.on('/projects', function () {
+			// track navigation
+			previousPage = currentPage;
+			currentPage = 'projects';
+			// update navbar
+			navbarActive();
+			// display home page
+			loadHTML('./pages/projects.html', 'view');
+			}).resolve();
+
 	router.on('/home', function () {
 		// track navigation
 		previousPage = currentPage;
@@ -75,6 +88,9 @@ function createRoutes(){
 
 			if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
 				loadHTML('./pages/edit.html', 'view');
+				setTimeout(function(){
+					tinymceInit();
+				}, 500);
 			}
 			else{
 				loadHTML('./pages/login.html', 'view');
