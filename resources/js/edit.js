@@ -14,3 +14,9 @@ function tinymceSubmit(){
 		HTML: tinyMCE.activeEditor.getContent()
 	})
 }
+
+function editPage(){
+	firebase.database().ref('/HTML/' + $('option:selected').text()).once('value').then(function(snapshot) {
+			tinyMCE.get('editor').setContent(snapshot.val().HTML);
+	});
+}
