@@ -90,6 +90,7 @@ function createRoutes(){
 			}
 			else{
 				window.location = "#/"+previousPage;
+				Alert("Success:", "You have been logged in.", 4000);
 			}
 	  }).resolve();
 

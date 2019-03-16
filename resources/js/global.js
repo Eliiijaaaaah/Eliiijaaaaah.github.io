@@ -20,7 +20,8 @@ function FirebaseLogout(){
 	firebase.auth().signOut()
   .then(function() {
     //alert('You have been logged out.');
-		window.location = '#/home';
+		router.navigate("/home");
+		Alert("Success:", "You have been logged out.", 4000);
   })
   .catch(function(error) {
     // An error happened
@@ -45,7 +46,6 @@ function Alert(title, msg, timeout){
   req.onload = function() {
     var html = req.responseText;
 		html = html.replace('@title', title).replace('@msg', msg);;
-		console.log(html);
 
 		$id('alert').innerHTML = html;
   };

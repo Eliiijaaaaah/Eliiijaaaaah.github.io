@@ -6,6 +6,8 @@ function tinymceInit(){
 	   tinycomments_mode: 'embedded',
 	   tinycomments_author: 'Author name'
 	});
+
+	editPage();
 }
 
 function tinymceSubmit(){
