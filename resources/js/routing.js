@@ -14,7 +14,7 @@ function loadHTML(url, id) {
   req = new XMLHttpRequest();
   req.open('GET', url);
   req.send();
-  req.onload = () => {
+  req.onload = function() {
     $id(id).innerHTML = req.responseText;
 		loadFirebaseData();
 		tinymceInit();
@@ -101,7 +101,7 @@ function createRoutes(){
 		  }).resolve();
 
 	// set the 404 route
-	router.notFound((query) => { $id('view').innerHTML = '<h3>Couldn\'t find the page you\'re looking for...</h3>'; });
+	router.notFound((query) = function() { $id('view').innerHTML = '<h3>Couldn\'t find the page you\'re looking for...</h3>'; });
 
 	router.resolve();
 }

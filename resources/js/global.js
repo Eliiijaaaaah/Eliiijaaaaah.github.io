@@ -42,7 +42,7 @@ function Alert(title, msg, timeout){
 	req = new XMLHttpRequest();
   req.open('GET', './pages/alert.html');
   req.send();
-  req.onload = () => {
+  req.onload = function() {
     var html = req.responseText;
 		html = html.replace('@title', title).replace('@msg', msg);;
 		console.log(html);
