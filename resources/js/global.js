@@ -31,7 +31,7 @@ function FirebaseLogout(){
 function FirebaseLogin(){
 	firebase.auth().signInWithEmailAndPassword($('#username').val(), $('#password').val()).then(function(){
 		// TODO: Success
-		window.location = '#/login';
+		changePage("/login");
 	}).catch(function(error) {
 	  // Handle Errors here.
 	  var errorCode = error.code;
@@ -51,6 +51,19 @@ function Alert(title, msg, timeout){
   };
 
 	setTimeout(function(){
-		$('.alert').alert('close')
+		$('.alert').alert('hide')
 	}, timeout);
+}
+
+function Toast(title, msg, timeout){
+	req = new XMLHttpRequest();
+  req.open('GET', './pages/toast.html');
+  req.send();
+  req.onload = function() {
+    var html = req.responseText;
+		html = html.replace('@title', title).replace('@msg', msg).replace('@Timeout', timeout);
+
+		$id('toast').innerHTML = html;
+		$(".toast").toast('show');
+  };
 }

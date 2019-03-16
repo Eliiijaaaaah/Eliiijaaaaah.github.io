@@ -101,12 +101,16 @@ function createRoutes(){
 			previousPage = currentPage;
 			currentPage = 'login';
 			navbarActive();
-			if(firebase.auth().currentUser == null){
+			if(firebase.auth().currentUser != null && previousPage == null){
+				$id('view').innerHTML = '<h3>You\'re logged in!</h3>';
+			}
+			else if(firebase.auth().currentUser == null){
 				loadHTML('./pages/login.html', 'view');
 			}
 			else{
-				window.location = "#/"+previousPage;
-				Alert("Success:", "You have been logged in.", 4000);
+				$.when(changePage("/"+previousPage)).then(function(){
+					Alert("Success:", "You have been logged in.", 4000);
+				});
 			}
 	  }).resolve();
 
