@@ -1,7 +1,9 @@
 // Routing based on: https://github.com/krasimir/navigo
 var currentPage;
 var previousPage;
-var pages = ["home", "about", "edit", "login", "logout", "projects"];
+var dismissed = false;
+var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
+var pages = ["home", "about", "edit", "login", "logout", "projects", "blog"];
 
 // getElementById wrapper
 function $id(id) {
@@ -17,6 +19,9 @@ function loadHTML(url, id) {
   req.onload = function() {
     $id(id).innerHTML = req.responseText;
 		loadFirebaseData();
+		if(!dismissed){
+			Alert("Message of the day:", MOTD, 5000);
+		}
   };
 }
 
@@ -61,15 +66,47 @@ function createRoutes(){
 		loadHTML('./pages/about.html', 'view');
 	  }).resolve();
 
-		router.on('/projects', function () {
-			// track navigation
-			previousPage = currentPage;
-			currentPage = 'projects';
-			// update navbar
-			navbarActive();
-			// display home page
-			loadHTML('./pages/projects.html', 'view');
-			}).resolve();
+	router.on('/projects', function () {
+		// track navigation
+		previousPage = currentPage;
+		currentPage = 'projects';
+		// update navbar
+		navbarActive();
+		// display home page
+		loadHTML('./pages/projects.html', 'view');
+		}).resolve();
+
+	router.on('/blog', function () {
+		// track navigation
+		previousPage = currentPage;
+		currentPage = 'blog';
+		// update navbar
+		navbarActive();
+		// display home page
+		//loadHTML('./pages/blog.html', 'view');
+		var html = "";
+
+		req = new XMLHttpRequest();
+		req.open('GET', './pages/blog.html');
+		req.send();
+		req.onload = function() {
+			var response = req.responseText;
+			firebase.database().ref('/HTML/blog').on('value', function(blogs) {
+				blogs.forEach(function(snapshot){
+					html = html+response;
+					html = html.replace("@Title", snapshot.val().Title).replace("@Date", snapshot.val().Date).replace("@Body", snapshot.val().Body);
+
+					console.log(html);
+				});
+				$id('view').innerHTML = html;
+				if(!dismissed){
+					Alert("Message of the day:", MOTD, 5000);
+				}
+			});
+
+		};
+
+		}).resolve();
 
 	router.on('/home', function () {
 		// track navigation

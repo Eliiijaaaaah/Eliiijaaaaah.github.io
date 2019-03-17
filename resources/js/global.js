@@ -45,13 +45,13 @@ function Alert(title, msg, timeout){
   req.send();
   req.onload = function() {
     var html = req.responseText;
-		html = html.replace('@title', title).replace('@msg', msg);;
+		html = html.replace('@title', title).replace('@msg', msg);
 
 		$id('alert').innerHTML = html;
   };
 
 	setTimeout(function(){
-		$('.alert').alert('hide')
+		$('.alert').alert('fade')
 	}, timeout);
 }
 
@@ -66,4 +66,8 @@ function Toast(title, msg, timeout){
 		$id('toast').innerHTML = html;
 		$(".toast").toast('show');
   };
+}
+
+function dismissMOTD(){
+	dismissed = true;
 }
