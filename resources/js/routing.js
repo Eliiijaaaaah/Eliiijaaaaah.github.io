@@ -2,6 +2,8 @@
 var currentPage;
 var previousPage;
 var dismissed = false;
+var auth = false;
+var hasJS = false;
 var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
 var pages = ["home", "about", "edit", "login", "logout", "projects", "blog"];
 
@@ -12,17 +14,42 @@ function $id(id) {
 
 // asyncrhonously fetch the html template partial from the file directory,
 // then set its contents to the html of the parent element
-function loadHTML(url, id) {
-  req = new XMLHttpRequest();
-  req.open('GET', url);
-  req.send();
-  req.onload = function() {
-    $id(id).innerHTML = req.responseText;
-		loadFirebaseData();
+function loadHTML() {
+	var url = "./pages/"+currentPage+".html";
+	req = new XMLHttpRequest();
+	req.open('GET', url);
+	req.send();
+	req.onload = function() {
+		$id('view').innerHTML = req.responseText;
+		//loadFirebaseData();
+		loadJS();
+
 		if(!dismissed){
 			Alert("Message of the day:", MOTD, 5000);
 		}
-  };
+	}
+}
+
+function loadJS(){
+	if(hasJS) {
+		var options = $.extend( options || {}, {
+			dataType: "script",
+			cache: true,
+			url: "./resources/js/"+currentPage+".js",
+			error: function()
+			{
+					//file not exists
+			},
+			success: function()
+			{
+					//file exists
+			}
+		});
+
+		$.ajax( options );
+	}
+
+	hasJS = false;
 }
 
 function loadFirebaseData(){
@@ -43,6 +70,25 @@ function navbarActive(){
 	$('#'+currentPage).addClass('active');
 }
 
+function routingDefault(){
+	if(auth){
+		if(firebase.auth().currentUser != null){
+			loadHTML();
+			navbarActive();
+			console.log("asdf");
+		}
+		else{
+			router.navigate("/home");
+		}
+
+		auth = false;
+	}
+	else{
+		loadHTML();
+		navbarActive();
+	}
+}
+
 // Creates routes
 function createRoutes(){
 	router = new Navigo(null, true, '#');
@@ -50,30 +96,27 @@ function createRoutes(){
 			// track navigation
 			previousPage = currentPage;
 			currentPage = 'home';
-			// update navbar
-			navbarActive();
-	    // display home page
-			loadHTML('./pages/home.html', 'view');
+
+			// navigate
+			routingDefault();
 	  }).resolve();
 
 	router.on('/about', function () {
 		// track navigation
 		previousPage = currentPage;
 		currentPage = 'about';
-		// update navbar
-		navbarActive();
-		// display home page
-		loadHTML('./pages/about.html', 'view');
+
+		// navigate
+		routingDefault();
 	  }).resolve();
 
 	router.on('/projects', function () {
 		// track navigation
 		previousPage = currentPage;
 		currentPage = 'projects';
-		// update navbar
-		navbarActive();
-		// display home page
-		loadHTML('./pages/projects.html', 'view');
+
+		// navigate
+		routingDefault();
 		}).resolve();
 
 	router.on('/blog', function () {
@@ -84,6 +127,7 @@ function createRoutes(){
 		navbarActive();
 		// display home page
 		//loadHTML('./pages/blog.html', 'view');
+		hasJS = true;
 		var html = "";
 
 		req = new XMLHttpRequest();
@@ -105,29 +149,30 @@ function createRoutes(){
 			});
 
 		};
-
+		hasJS = false;
 		}).resolve();
 
 	router.on('/home', function () {
 		// track navigation
 		previousPage = currentPage;
 		currentPage = 'home';
-		// update navbar
-		navbarActive();
-		// display home page
-		loadHTML('./pages/home.html', 'view');
+
+		// navigate
+		routingDefault();
 	  }).resolve();
 
 	router.on('/edit', function () {
 			previousPage = currentPage;
 			currentPage = 'edit';
-			navbarActive();
+			auth = true;
+			routingDefault();
 
 			if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
-				loadHTML('./pages/edit.html', 'view');
+				//loadHTML();
 				setTimeout(function(){
+					console.log("tinymce");
 					tinymceInit();
-				}, 500);
+				}, 2000);
 			}
 			else{
 				loadHTML('./pages/login.html', 'view');
