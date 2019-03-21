@@ -25,7 +25,8 @@ function loadHTML() {
 		loadJS();
 
 		if(!dismissed){
-			Alert("Message of the day:", MOTD, 5000);
+			Alert("Message of the day:", MOTD, 8000);
+			setTimeout(function(){dismissed = true}, 8000);
 		}
 	}
 }

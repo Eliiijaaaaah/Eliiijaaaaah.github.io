@@ -51,7 +51,7 @@ function Alert(title, msg, timeout){
   };
 
 	setTimeout(function(){
-		$('.alert').alert('fade')
+		$('.alert').alert('close')
 	}, timeout);
 }
 
