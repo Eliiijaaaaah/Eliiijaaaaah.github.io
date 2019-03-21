@@ -5,7 +5,7 @@ var dismissed = false;
 var auth = false;
 var hasJS = false;
 var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
-var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog"];
+var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact"];
 
 // getElementById wrapper
 function $id(id) {
@@ -118,6 +118,15 @@ function createRoutes(){
 		routingDefault();
 		}).resolve();
 
+	router.on('/contact', function () {
+		// track navigation
+		previousPage = currentPage;
+		currentPage = 'contact';
+
+		// navigate
+		routingDefault();
+		}).resolve();
+
 	router.on('/blog', function () {
 		// track navigation
 		previousPage = currentPage;
@@ -146,7 +155,7 @@ function createRoutes(){
 
 		};
 		hasJS = false;
-		}).resolve();
+	}).resolve();
 
 	router.on('/home', function () {
 		// track navigation
@@ -155,7 +164,7 @@ function createRoutes(){
 
 		// navigate
 		routingDefault();
-	  }).resolve();
+	 }).resolve();
 
 	router.on('/edit', function () {
 			previousPage = currentPage;
