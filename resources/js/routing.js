@@ -5,7 +5,7 @@ var dismissed = false;
 var auth = false;
 var hasJS = false;
 var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
-var pages = ["home", "about", "edit", "login", "logout", "projects", "blog"];
+var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog"];
 
 // getElementById wrapper
 function $id(id) {
@@ -75,10 +75,9 @@ function routingDefault(){
 		if(firebase.auth().currentUser != null){
 			loadHTML();
 			navbarActive();
-			console.log("asdf");
 		}
 		else{
-			router.navigate("/home");
+			$id('view').innerHTML = "Unauthorized to view this page.";
 		}
 
 		auth = false;
@@ -127,7 +126,6 @@ function createRoutes(){
 		navbarActive();
 		// display home page
 		//loadHTML('./pages/blog.html', 'view');
-		hasJS = true;
 		var html = "";
 
 		req = new XMLHttpRequest();
@@ -139,8 +137,6 @@ function createRoutes(){
 				blogs.forEach(function(snapshot){
 					html = html+response;
 					html = html.replace("@Title", snapshot.val().Title).replace("@Date", snapshot.val().Date).replace("@Body", snapshot.val().Body);
-
-					console.log(html);
 				});
 				$id('view').innerHTML = html;
 				if(!dismissed){
@@ -165,12 +161,12 @@ function createRoutes(){
 			previousPage = currentPage;
 			currentPage = 'edit';
 			auth = true;
+			hasJS = true;
 			routingDefault();
 
 			if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
 				//loadHTML();
 				setTimeout(function(){
-					console.log("tinymce");
 					tinymceInit();
 				}, 2000);
 			}
@@ -178,6 +174,24 @@ function createRoutes(){
 				loadHTML('./pages/login.html', 'view');
 			}
 	  }).resolve();
+
+		router.on('/edit/blog', function () {
+				previousPage = currentPage;
+				currentPage = 'editBlog';
+				auth = true;
+				hasJS = true;
+				routingDefault();
+
+				if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
+					//loadHTML();
+					setTimeout(function(){
+						tinymceInit();
+					}, 2000);
+				}
+				else{
+					loadHTML('./pages/login.html', 'view');
+				}
+			}).resolve();
 
 	router.on('/login', function () {
 			previousPage = currentPage;
@@ -190,6 +204,7 @@ function createRoutes(){
 				loadHTML('./pages/login.html', 'view');
 			}
 			else{
+				//TODO: Fix this
 				$.when(changePage("/"+previousPage)).then(function(){
 					Alert("Success:", "You have been logged in.", 4000);
 				});

@@ -1,0 +1,15 @@
+<label>Blog post to edit</label>
+
+<select class="form-control" id="blogTitles" onchange="loadBlog()">
+	<option>--New Blog--</option>
+</select>
+
+<br/>
+
+<input type="text" placeholder="Title" class="form-control" id="blogTitle"></input>
+
+<br/>
+
+<textarea id='editor'></textarea>
+
+<button onclick="submitBlog()">Submit</button>
