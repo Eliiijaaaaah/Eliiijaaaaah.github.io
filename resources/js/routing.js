@@ -2,7 +2,6 @@
 var currentPage;
 var previousPage;
 var dismissed = false;
-var auth = false;
 var hasJS = false;
 var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
 var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact"];
@@ -72,21 +71,8 @@ function navbarActive(){
 }
 
 function routingDefault(){
-	if(auth){
-		if(firebase.auth().currentUser != null){
-			loadHTML();
-			navbarActive();
-		}
-		else{
-			$id('view').innerHTML = "Unauthorized to view this page.";
-		}
-
-		auth = false;
-	}
-	else{
 		loadHTML();
 		navbarActive();
-	}
 }
 
 // Creates routes
@@ -170,7 +156,6 @@ function createRoutes(){
 	router.on('/edit', function () {
 			previousPage = currentPage;
 			currentPage = 'edit';
-			auth = true;
 			hasJS = true;
 			routingDefault();
 
@@ -188,7 +173,6 @@ function createRoutes(){
 		router.on('/edit/blog', function () {
 				previousPage = currentPage;
 				currentPage = 'editBlog';
-				auth = true;
 				hasJS = true;
 				routingDefault();
 
