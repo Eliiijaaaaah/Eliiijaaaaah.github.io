@@ -68,9 +68,10 @@ function loadFirebaseData(){
 function navbarActive(){
 	$.each(pages, function(i, value){
 		$('#'+value).removeClass('active');
+		if(value == currentPage){
+			$('#'+currentPage).addClass('active');			
+		}
 	});
-
-	$('#'+currentPage).addClass('active');
 }
 
 function routingDefault(){
@@ -224,7 +225,11 @@ function createRoutes(){
 	  }).resolve();
 
 	// set the 404 route
-	router.notFound((query) = function() { $id('view').innerHTML = '<h3>Couldn\'t find the page you\'re looking for...</h3>'; });
+	router.notFound((query) = function() {
+		currentPage = "";
+		navbarActive();
+		$id('view').innerHTML = '<h3>Couldn\'t find the page you\'re looking for...</h3>';
+	});
 
 	router.resolve();
 }
