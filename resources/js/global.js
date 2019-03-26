@@ -20,8 +20,8 @@ function FirebaseLogout(){
 	firebase.auth().signOut()
   .then(function() {
     //alert('You have been logged out.');
-		router.navigate("/home");
 		Alert("Success:", "You have been logged out.", 4000);
+		router.navigate("/home");
   })
   .catch(function(error) {
     // An error happened
@@ -32,6 +32,7 @@ function FirebaseLogin(){
 	firebase.auth().signInWithEmailAndPassword($('#username').val(), $('#password').val()).then(function(){
 		// TODO: Success
 		changePage("/login");
+		Alert("Success:", "You have been logged in", 5000);
 	}).catch(function(error) {
 	  // Handle Errors here.
 	  var errorCode = error.code;

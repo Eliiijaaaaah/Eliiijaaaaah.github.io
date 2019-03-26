@@ -1,10 +1,13 @@
 // Routing based on: https://github.com/krasimir/navigo
 var currentPage;
 var previousPage;
-var dismissed = false;
 var hasJS = false;
+
+var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact", "admin"];
+
+// Message of the day
+var dismissed = false;
 var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
-var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact"];
 
 // getElementById wrapper
 function $id(id) {
@@ -71,8 +74,21 @@ function navbarActive(){
 }
 
 function routingDefault(){
-		loadHTML();
-		navbarActive();
+	loadHTML();
+	navbarActive();
+
+	if(firebase.auth().currentUser != null){
+		if($id("admin") == null) {
+			$id("navbar").innerHTML = $id("navbar").innerHTML + "<li id='admin' class='nav-item'><a onclick='changePage(\"/admin\")' data-navigo class='nav-link'>Admin Panel</a></li>";
+		}
+		if($id("logout") == null) {
+			$id("navbar").innerHTML = $id("navbar").innerHTML + "<li id='logout' class='nav-item'><a onclick='changePage(\"/logout\")' data-navigo class='nav-link'>Logout</a></li>";
+		}
+	}
+	else if($id("admin") != null){
+		$id("admin").remove();
+		$id("logout").remove();
+	}
 }
 
 // Creates routes
@@ -118,30 +134,13 @@ function createRoutes(){
 		// track navigation
 		previousPage = currentPage;
 		currentPage = 'blog';
-		// update navbar
+
+		// loads blog.js
+		hasJS = true;
+		loadJS();
+
+		// sets navbar active item
 		navbarActive();
-		// display home page
-		//loadHTML('./pages/blog.html', 'view');
-		var html = "";
-
-		req = new XMLHttpRequest();
-		req.open('GET', './pages/blog.html');
-		req.send();
-		req.onload = function() {
-			var response = req.responseText;
-			firebase.database().ref('/HTML/blog').on('value', function(blogs) {
-				blogs.forEach(function(snapshot){
-					html = html+response;
-					html = html.replace("@Title", snapshot.val().Title).replace("@Date", snapshot.val().Date).replace("@Body", snapshot.val().Body);
-				});
-				$id('view').innerHTML = html;
-				if(!dismissed){
-					Alert("Message of the day:", MOTD, 5000);
-				}
-			});
-
-		};
-		hasJS = false;
 	}).resolve();
 
 	router.on('/home', function () {
@@ -154,63 +153,75 @@ function createRoutes(){
 	 }).resolve();
 
 	router.on('/edit', function () {
-			previousPage = currentPage;
-			currentPage = 'edit';
-			hasJS = true;
-			routingDefault();
-
-			if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
-				//loadHTML();
-				setTimeout(function(){
-					tinymceInit();
-				}, 2000);
-			}
-			else{
-				loadHTML('./pages/login.html', 'view');
-			}
+		if(firebase.auth().currentUser != null) {
+			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
+				if (snapshot.val() == true) {
+					previousPage = currentPage;
+					currentPage = 'edit';
+					hasJS = true;
+					routingDefault();
+					setTimeout(function(){tinymceInit();}, 500);
+				}
+			});
+		}
+		else{
+			$id('view').innerHTML = "You are unauthorized to view this page.";
+		}
 	  }).resolve();
 
-		router.on('/edit/blog', function () {
-				previousPage = currentPage;
-				currentPage = 'editBlog';
-				hasJS = true;
-				routingDefault();
-
-				if(firebase.auth().currentUser != null && firebase.auth().currentUser.uid == 'lo2raCbiGReVwUcTfZr62qjXEIC2'){
-					//loadHTML();
-					setTimeout(function(){
-						tinymceInit();
-					}, 2000);
+	router.on('/edit/blog', function () {
+		if(firebase.auth().currentUser != null) {
+			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
+				if (snapshot.val() == true) {
+					previousPage = currentPage;
+					currentPage = 'editBlog';
+					hasJS = true;
+					routingDefault();
+					setTimeout(function(){tinymceInit();}, 500);
 				}
-				else{
-					loadHTML('./pages/login.html', 'view');
-				}
-			}).resolve();
+			});
+		}
+		else{
+			$id('view').innerHTML = "You are unauthorized to view this page.";
+		}
+		}).resolve();
 
 	router.on('/login', function () {
 			previousPage = currentPage;
 			currentPage = 'login';
 			navbarActive();
-			if(firebase.auth().currentUser != null && previousPage == null){
+			if(firebase.auth().currentUser != null && (previousPage == null || previousPage == "login")){
 				$id('view').innerHTML = '<h3>You\'re logged in!</h3>';
 			}
 			else if(firebase.auth().currentUser == null){
 				loadHTML('./pages/login.html', 'view');
 			}
-			else{
-				//TODO: Fix this
-				$.when(changePage("/"+previousPage)).then(function(){
-					Alert("Success:", "You have been logged in.", 4000);
-				});
+			else {
+				changePage("/"+previousPage);
 			}
 	  }).resolve();
 
-		router.on('/logout', function () {
-				previousPage = currentPage;
-				currentPage = 'logout';
-				navbarActive();
-		    FirebaseLogout();
-		  }).resolve();
+	router.on('/logout', function () {
+			previousPage = currentPage;
+			currentPage = 'logout';
+			navbarActive();
+	    FirebaseLogout();
+	  }).resolve();
+
+	router.on('/admin', function () {
+		if(firebase.auth().currentUser != null) {
+			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
+				if (snapshot.val() == true) {
+					previousPage = currentPage;
+					currentPage = 'admin';
+					routingDefault();
+				}
+			});
+		}
+		else{
+			$id('view').innerHTML = "You are unauthorized to view this page.";
+		}
+	  }).resolve();
 
 	// set the 404 route
 	router.notFound((query) = function() { $id('view').innerHTML = '<h3>Couldn\'t find the page you\'re looking for...</h3>'; });
