@@ -2,11 +2,32 @@ function tinymceInit(){
 	firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
 		if (snapshot.val() == true) {
 			tinymce.init({
-			   selector: 'textarea',
-			   plugins: 'a11ychecker advcode formatpainter linkchecker media mediaembed pageembed permanentpen powerpaste tinycomments tinydrive tinymcespellchecker',
-			   toolbar: 'a11ycheck addcomment showcomments code formatpainter insertfile pageembed permanentpen',
-			   tinycomments_mode: 'embedded',
-			   tinycomments_author: 'Author name'
+				selector: 'textarea',
+				plugins: 'a11ychecker advcode formatpainter linkchecker media mediaembed pageembed permanentpen powerpaste tinycomments tinydrive tinymcespellchecker image imagetools',
+				toolbar: 'a11ycheck addcomment showcomments code formatpainter insertfile pageembed permanentpen',
+				tinycomments_mode: 'embedded',
+				tinycomments_author: 'Author name',
+				image_title: true,
+				automatic_uploads: true,
+				images_upload_url: '{{url("/admin/upload")}}',
+				file_picker_types: 'image',
+				file_picker_callback: function(cb, value, meta) {
+					var input = document.createElement('input');
+					input.setAttribute('type', 'file');
+					input.setAttribute('accept', 'image/*');
+
+					input.onchange = function() {
+						var ref= firebase.database().ref("Uploads");
+						var storage = firebase.storage();
+						var pathReference = storage.ref('images/'+value);
+						pathReference.getDownloadURL().then(function(url) {
+							ref.push().set({
+								imgurl: url
+							});
+						});
+						input.click();
+					}
+				}
 			});
 
 			blogTitles();
