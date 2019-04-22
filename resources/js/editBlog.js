@@ -94,7 +94,7 @@ function submitBlog(){
 
 			if($('option:selected').val() == "--New Blog--"){
 				firebase.database().ref('/HTML/blog/').on('value', function(blogs) {
-					id = "post"+blogs.numChildren()+1;
+					id = "post"+blogs.numChildren();
 					path = "/HTML/blog/"+id;
 				});
 			}
