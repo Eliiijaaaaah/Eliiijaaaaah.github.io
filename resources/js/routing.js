@@ -41,7 +41,7 @@ function loadJS(){
 			url: "./resources/js/"+currentPage+".js",
 			error: function()
 			{
-					//file not exists
+					//file does not exists
 			},
 			success: function()
 			{
@@ -69,7 +69,7 @@ function navbarActive(){
 	$.each(pages, function(i, value){
 		$('#'+value).removeClass('active');
 		if(value == currentPage){
-			$('#'+currentPage).addClass('active');			
+			$('#'+currentPage).addClass('active');
 		}
 	});
 }
