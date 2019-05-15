@@ -80,7 +80,7 @@ function routingDefault(){
 
 	if(firebase.auth().currentUser != null){
 		if($id("admin") == null) {
-			$id("navbar").innerHTML = $id("navbar").innerHTML + "<li id='admin' class='nav-item'><a onclick='changePage(\"/admin\")' data-navigo class='nav-link'>Admin Panel</a></li>";
+			$id("navbar").innerHTML = $id("navbar").innerHTML + "<li id='admin' class='nav-item'><a onclick='changePage(\"/admin\")' data-navigo class='nav-link'>Admin</a></li>";
 		}
 		if($id("logout") == null) {
 			$id("navbar").innerHTML = $id("navbar").innerHTML + "<li id='logout' class='nav-item'><a onclick='changePage(\"/logout\")' data-navigo class='nav-link'>Logout</a></li>";
