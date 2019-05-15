@@ -155,7 +155,7 @@ function createRoutes(){
 
 	router.on('/edit', function () {
 		if(firebase.auth().currentUser != null) {
-			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
+			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', function(snapshot){
 				if (snapshot.val() == true) {
 					previousPage = currentPage;
 					currentPage = 'edit';
@@ -172,7 +172,7 @@ function createRoutes(){
 
 	router.on('/edit/blog', function () {
 		if(firebase.auth().currentUser != null) {
-			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
+			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', function(snapshot){
 				if (snapshot.val() == true) {
 					previousPage = currentPage;
 					currentPage = 'editBlog';
@@ -211,7 +211,7 @@ function createRoutes(){
 
 	router.on('/admin', function () {
 		if(firebase.auth().currentUser != null) {
-			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', snapshot => {
+			firebase.database().ref('/Users/'+firebase.auth().currentUser.uid+'/Admin').once('value', function(snapshot){
 				if (snapshot.val() == true) {
 					previousPage = currentPage;
 					currentPage = 'admin';
