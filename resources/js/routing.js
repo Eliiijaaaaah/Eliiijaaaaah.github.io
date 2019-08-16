@@ -1,7 +1,7 @@
 // Routing based on: https://github.com/krasimir/navigo
 var currentPage;
 var previousPage;
-var hasJS = false;
+var hasJS = true;
 
 var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact", "admin"];
 
