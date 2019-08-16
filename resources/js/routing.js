@@ -1,12 +1,12 @@
 // Routing based on: https://github.com/krasimir/navigo
 var currentPage;
 var previousPage;
-var hasJS = true;
+var hasJS = false;
 
 var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact", "admin"];
 
 // Message of the day
-var dismissed = false;
+var dismissed = true;
 var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
 
 // getElementById wrapper
