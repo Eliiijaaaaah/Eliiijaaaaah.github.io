@@ -7,7 +7,7 @@ var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "ed
 
 // Message of the day
 var dismissed = true;
-var MOTD = "I'm currently on the job hunt so if you're a reqruiter, reach out!";
+var MOTD = "";
 
 // getElementById wrapper
 function $id(id) {
