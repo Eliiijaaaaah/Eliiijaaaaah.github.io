@@ -104,6 +104,16 @@ function createRoutes(){
 			routingDefault();
 	  }).resolve();
 
+  //Custom Css Test Page
+  router.on('/css', function(){
+    // track navigation
+    previousPage = currentPage;
+    currentPage = 'css';
+
+    // navigate
+    routingDefault();
+  }).resolve();
+
 	router.on('/about', function () {
 		// track navigation
 		previousPage = currentPage;
@@ -223,15 +233,6 @@ function createRoutes(){
 			$id('view').innerHTML = "You are unauthorized to view this page.";
 		}
 	  }).resolve();
-
-  //Custom Css Test Page
-  router.on('/css', function(){
-    // track navigation
-    previousPage = currentPage;
-    currentPage = 'css';
-
-    loadHTML();
-  }).resolve();
 
 	// set the 404 route
 	router.notFound((query) = function() {
