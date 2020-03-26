@@ -224,6 +224,11 @@ function createRoutes(){
 		}
 	  }).resolve();
 
+  //Custom Css Test Page
+  router.on('/css', function(){
+    loadHTML('./pages/css.html', 'view');
+  }).resolve();
+
 	// set the 404 route
 	router.notFound((query) = function() {
 		currentPage = "";
