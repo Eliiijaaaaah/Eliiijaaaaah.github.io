@@ -3,7 +3,7 @@ var currentPage;
 var previousPage;
 var hasJS = false;
 
-var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact", "admin"];
+var pages = ["home", "about", "edit", "login", "logout", "projects", "blog", "editBlog", "contact", "admin", "css"];
 
 // Message of the day
 var dismissed = true;
@@ -226,7 +226,11 @@ function createRoutes(){
 
   //Custom Css Test Page
   router.on('/css', function(){
-    loadHTML('./pages/css.html', 'view');
+    // track navigation
+    previousPage = currentPage;
+    currentPage = 'home';
+
+    loadHTML();
   }).resolve();
 
 	// set the 404 route
