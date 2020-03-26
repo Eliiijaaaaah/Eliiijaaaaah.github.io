@@ -228,7 +228,7 @@ function createRoutes(){
   router.on('/css', function(){
     // track navigation
     previousPage = currentPage;
-    currentPage = 'home';
+    currentPage = 'css';
 
     loadHTML();
   }).resolve();
