@@ -4,7 +4,12 @@
   "name": "Host Probe",
   "place": "Nowhere",
   "url": "https://eliiijaaaaah.github.io",
-  "connections": [],
+  "connections": [
+    {
+      "name": "Elijah",
+      "url": "https://vitromedialab.com/"
+    }
+  ],
   "collections": [
     {
       "id": "urn:uuid:8a2b7c14-3e9d-4a6f-b105-2c8e91d7f430",
