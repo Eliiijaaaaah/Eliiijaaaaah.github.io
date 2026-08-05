@@ -1,197 +1,192 @@
-# Eliiijaaaaah.github.io — a node
+# A node
 
-This repository is two things at once:
+This repository is a working node in a discovery network, and a template for making your
+own. Fork it, put music in `sources/`, push. Everything else happens on its own.
 
-1. **A node.** It publishes `catalog.json`, a small JSON file describing what is released
-   here and who this node is connected to. That file *is* the node. Everything else is
-   delivery.
-2. **A player.** `index.html` is the whole listening app in one self-contained file —
-   inlined CSS and JS, no external requests. Opening it starts a crawl from whatever
-   address you give it.
+It is also two other things at once:
 
-There is no server, no database, no accounts, and no registry. A node is a static file on
-a domain somebody controls. A network is a set of those files that name each other.
+- **A manifest.** `.well-known/catalog.json` describes what is released here and who this
+  node is connected to. That file *is* the node. Everything else is delivery.
+- **A player.** `index.html` is the whole listening app in one self-contained file — no
+  external requests. Open it and it starts crawling from whatever address you give it.
+
+There is no server, no database, no accounts, and no registry.
+
+The audio in `sources/` is a pair of synthesised test tones, not music. They exist so a
+fresh fork is a working node on the first push, and so there is something to hear while
+checking that playback works. Delete them when you add your own.
 
 ## The idea in four sentences
 
-Publishers put a manifest on their own domain listing their releases and their
-connections. A listener opens the player, pastes in one address, and the player walks
-outward from there — fetching each connected manifest, verifying the media actually
-plays, and following the graph.
+Publishers put a manifest on a domain they control, listing their releases and their
+connections. A listener opens the player, pastes in one address, and it walks outward from
+there — fetching each connected manifest, checking the media actually plays, and following
+the graph.
 
-Nobody operates it. There is no index to be listed in and no algorithm to be ranked by.
-**A connection only counts when both sides declare it**, so who you can reach is decided
+Nobody operates it. There is no index to be listed in and no algorithm to rank you, and
+**a connection only counts when both sides declare it** — so who you can reach is decided
 entirely by who vouches for whom.
 
-## Layout
+## Making your own node
 
-```
-.well-known/catalog.json   the manifest. this is the node.
-catalog.json               a copy at the root, for the fallback discovery path
-media/                     the audio and cover art the manifest points at
-index.html                 the player, single file
-.nojekyll                  required — see below, it is not optional
-LICENSE
-```
+### 1. Fork this repo and rename it
 
-## What has to be true for this to work
+Rename your fork to exactly `<your-username>.github.io`, then enable Pages under
+**Settings → Pages → Deploy from a branch → main**.
 
-These are not style preferences. Each one silently removes the node from the network if
-it is wrong, usually while the site still looks perfectly fine in a browser.
+The name matters. Discovery resolves `/.well-known/catalog.json` against the **origin**,
+and a project site lives at `username.github.io/repo/`, where that path does not exist.
+Only a user site or a custom domain can carry a node discoverable the preferred way. The
+build fails with an explanation if you get this wrong, so you cannot ship it by accident.
 
-**`.nojekyll` must exist at the repo root.** GitHub Pages runs Jekyll by default, and
-Jekyll drops directories whose name starts with a dot. Without this file,
-`/.well-known/catalog.json` returns 404 and the node is invisible via the preferred
-discovery path.
+### 2. Edit `site.json`
 
-**This must be a *user* Pages site, not a project site.** Discovery resolves
-`/.well-known/catalog.json` against the **origin**, never a path prefix. A project site
-lives at `user.github.io/repo/`, where that path does not exist. Only `user.github.io`
-(this repo) or a custom domain can carry a node discoverable the preferred way.
-
-**The `url` field must match where the site actually is.** Media paths in the manifest are
-relative and resolve against `url`. If it is stale — a renamed repo, a moved domain — every
-media URL 404s, playback fails, and the node drops out of the graph while still serving a
-perfectly valid-looking manifest. This is the single most common way a node dies quietly.
-
-**`size` and `sha256` must match the real bytes.** They are how a listener knows a file is
-what it claims to be. Replacing a track without updating them breaks verification.
-
-**`id` is minted once and never changed.** It is what makes this node the same node across
-rebuilds. A new id means every other node's link to you now points at a stranger.
-
-**Both `catalog.json` copies must say the same thing.** Discovery tries
-`/.well-known/catalog.json` first, then falls back to `/catalog.json`. If they disagree,
-the node's connections change depending on which path a crawler happened to take.
-
-> ⚠️ **They currently disagree.** `.well-known/catalog.json` lists a connection to
-> `https://vitromedialab.com/`; the root `catalog.json` has `"connections": []`. Fix by
-> copying the well-known one over the root one.
-
-## What GitHub Pages gives you for free
-
-Measured against this host, not assumed:
-
-- `Access-Control-Allow-Origin: *` on every response. This is required — without it a
-  browser refuses to read the manifest at all — and Pages sends it automatically.
-- `Accept-Ranges: bytes`, and ranged requests really do return `206 Partial Content`, so
-  the player can fetch a few kilobytes to test a file instead of downloading all of it.
-- Content types are guessed from the file extension. Pages serves `.opus` as `audio/ogg`,
-  `.flac` as `audio/x-flac`, and `.mp3` as `audio/mp3`, which disagree with the obvious
-  manifest declarations. That is fine and expected — same-family mismatches are tolerated.
-
-## Making a new node
-
-### 1. Get a host
-
-Fork or copy this repository into a new one named exactly `<username>.github.io`, then
-enable Pages on it (Settings → Pages → deploy from `main`). A custom domain works too.
-A project-site repo does not — see above.
-
-### 2. Replace the media
-
-Delete the contents of `media/` and put your own audio and cover art there. One folder per
-release keeps things readable:
-
-```
-media/
-  Wabash/
-    01 County Line.opus
-    02 Ditchwater.opus
-    cover.jpg
-```
-
-**Keep files small.** GitHub's web uploader rejects anything over 25 MB, git rejects
-anything over 100 MB, and a Pages site is capped at 1 GB total. A FLAC album is roughly
-300 MB and will not fit; the same album as Opus at 96 kbps is about 25 MB and will. If you
-have lossless sources, convert first:
-
-```bash
-ffmpeg -i "01 County Line.flac" -c:a libopus -b:a 96k "01 County Line.opus"
-```
-
-### 3. Write the manifest
-
-Easiest path — let the player do it:
-
-1. Open `index.html` (this repo's own copy works, or any deployed one).
-2. Go to **Settings → Publish a catalog**.
-3. Point it at your media folder. It reads tags, computes hashes and durations, and
-   preserves ids if you load your existing `catalog.json` first.
-4. Download the result and commit it to **both** `.well-known/catalog.json` and
-   `catalog.json`.
-
-Or write it by hand — the format is small and this is a real example:
+This is the half you write by hand. Everything else is generated.
 
 ```json
 {
   "v": 1,
-  "id": "urn:uuid:6d1f4a2e-5c3b-4f8a-9e21-7b0c5d4a3f19",
-  "name": "Host Probe",
-  "place": "Nowhere",
-  "url": "https://eliiijaaaaah.github.io",
+  "name": "Your Name",
+  "place": "Town, ST",
+  "url": "https://yourname.github.io",
   "connections": [
-    { "name": "Elijah", "url": "https://vitromedialab.com/" }
-  ],
-  "collections": [
-    {
-      "id": "urn:uuid:8a2b7c14-3e9d-4a6f-b105-2c8e91d7f430",
-      "title": "Header Measurements",
-      "date": "2026",
-      "art": {
-        "url": "media/cover.png",
-        "mime": "image/png",
-        "size": 2802,
-        "sha256": "ea50cbcb…"
-      },
-      "items": [
-        {
-          "n": 1,
-          "title": "probe.opus",
-          "duration": 4,
-          "preview": {
-            "url": "media/probe.opus",
-            "mime": "audio/opus",
-            "size": 176444,
-            "sha256": "e1c2cb55…"
-          }
-        }
-      ]
-    }
+    { "name": "Someone You Played With", "url": "https://theirsite.com" },
+    { "name": "The Spot Tavern", "url": null, "description": "No site. Played here a lot." }
   ]
 }
 ```
 
-Field notes: `id` values are UUIDs you mint once (`crypto.randomUUID()` in any browser
-console) — one for the node, one per release. `place` is optional. A connection may have
-`"url": null`, which means a real relationship with something that has no site. `date`
-accepts `"2024"`, `"2024-03"`, or `"2024-03-15"` — whatever precision you actually know.
+Delete the `id` line from your fork — a new one is minted on the first build and written
+back here. It identifies your node forever after, so let it be generated once and then
+leave it alone.
 
-### 4. Check it before telling anyone
+`place` is optional. A connection may have `"url": null`, which means a real relationship
+with something that has no site.
 
-Open the player, go to **Settings → Diagnose a node**, and paste your URL. It reports
-whether the manifest was found, whether CORS let it be read, whether a ranged request
-returned `206`, and whether the declared `url` matches reality. Fix anything red.
+### 3. Put music in `sources/`
 
-### 5. Get linked back — this is the actual join step
+Delete `sources/Test Tones/` and add your own. One folder per release. Filenames like
+`01 Title.flac` are parsed for track order, and embedded tags win over filenames wherever
+both exist.
 
-Adding someone to your `connections` does nothing on its own. **An edge only exists when
-both manifests name each other**; a one-sided link is displayed dimly and is never
-traversed, so nobody will reach you through it.
+```
+sources/
+  Wabash/
+    01 County Line.flac
+    02 Ditchwater.flac
+    cover.jpg
+```
 
-So the last step is social, not technical: message each person you listed, tell them your
-URL, and ask them to add you to their `connections`. That is what joining means here. There
-is no application to submit and no one to approve it.
+Any audio format ffmpeg reads works — the build converts everything to Opus for you.
+Cover art is copied through untouched, so resize it yourself; a camera-original photo is
+tens of megabytes and every listener pays for it.
+
+**Everything you commit here is public and permanent.** A public repository's history
+keeps files even after a later commit deletes them. Be deliberate about what goes in.
+
+**Tag your files, or at least don't rename folders after publishing.** A release is
+identified by its album tag, falling back to the folder name. Renaming an untagged
+folder therefore reads as a brand new release: it gets a new id, and every node linking
+to the old one goes stale. The build prints a warning when this happens.
+
+### 4. Push
+
+That is the whole publishing step. On every push that touches `sources/` or `site.json`,
+the [Catalog workflow](.github/workflows/catalog.yml) will:
+
+1. Transcode `sources/` into `media/` as Opus at 96 kbps, skipping anything unchanged.
+2. Read tags, durations, sizes and SHA-256 hashes.
+3. Preserve the ids of releases it has seen before.
+4. Write `.well-known/catalog.json` and `catalog.json`, and commit both.
+
+Watch it under the **Actions** tab. It fails loudly, with a reason, rather than publishing
+something broken.
+
+### 5. Check it
+
+Open `index.html`, go to **Settings → Diagnose a node**, and paste your URL. It reports
+whether the manifest was found, whether CORS let a browser read it, whether a ranged
+request returned `206`, and whether your declared `url` matches reality.
+
+### 6. Get linked back — this is the actual join step
+
+Listing someone in `connections` does nothing on its own. **An edge exists only when both
+manifests name each other.** A one-sided link is shown dimmed and is never traversed, so
+nobody reaches you through it.
+
+So the last step is social: message the people you listed, tell them your URL, and ask
+them to add you. That is what joining means here. There is no application and no one to
+approve it.
+
+## Layout
+
+```
+site.json                  the half you write. name, place, url, connections
+sources/                   the half you drop in. one folder per release
+media/                     generated — Opus previews and cover art
+.well-known/catalog.json   generated — the manifest. this is the node
+catalog.json               generated — a copy at the root, for the fallback path
+index.html                 the player, single file
+.nojekyll                  required. do not delete
+.github/workflows/         the build
+```
+
+Do not hand-edit anything marked generated; the next push overwrites it. Change
+`site.json` or `sources/` instead.
+
+## Things that silently break a node
+
+Each of these leaves the site looking perfectly healthy while removing it from the
+network. The build checks the ones it can.
+
+**`.nojekyll` must exist.** Pages runs Jekyll by default, and Jekyll drops directories
+whose name starts with a dot — taking `/.well-known/catalog.json` with it.
+
+**The `url` in `site.json` must be where the site actually is.** Media paths resolve
+against it, so a stale value means every file 404s and the node drops out of the graph
+while still serving a valid-looking manifest.
+
+**Your `id` must never change.** It is what makes this the same node across rebuilds.
+
+**Size limits are real.** GitHub's web uploader rejects files over 25 MB, git rejects
+anything over 100 MB, and a Pages site is capped at 1 GB. A FLAC album is around 300 MB;
+the same album as Opus is around 25 MB. The build transcodes for you, but the *sources*
+you commit still count against the repo, so drag-and-drop through the browser works for
+already-compressed audio and a git client is needed for anything lossless.
+
+## What GitHub Pages gives you for free
+
+Measured against this host rather than assumed:
+
+- `Access-Control-Allow-Origin: *` on every response. Required — without it a browser
+  refuses to read the manifest at all — and Pages sends it automatically.
+- `Accept-Ranges: bytes`, and ranged requests genuinely return `206 Partial Content`, so
+  the player can test a file with a few kilobytes instead of downloading all of it.
+- Content types guessed from the extension. Pages serves `.opus` as `audio/ogg`, which
+  disagrees with what the manifest declares. That is expected and tolerated — same-family
+  mismatches pass.
+
+## Where this comes from
+
+The build is a composite action from
+[Eliiijaaaaah/network-effect](https://github.com/Eliiijaaaaah/network-effect), which is
+also where the spec, the crawler and the player live. The manifest format is documented
+in full in that repository's `spec/README.md`.
 
 ## For an agent working on this repo
 
-- The manifest is the source of truth. Do not add build tooling, servers, or dependencies.
-- Never change an existing `id`. Preserve every id when regenerating a manifest.
-- Any change to a file in `media/` requires updating that file's `size` and `sha256`.
-- Write every manifest change to **both** `.well-known/catalog.json` and `catalog.json`.
-- Preserve unknown keys you find in a manifest. They may come from a newer version of the
-  format or be hand-authored; dropping them destroys data.
-- `index.html` is a build artifact from the player project. Do not hand-edit it; replace it
-  wholesale with a fresh single-file build.
-- Verify with the player's **Diagnose a node** view rather than by eye. A manifest that
-  parses is not the same as a node that works.
+- `site.json` and `sources/` are the only inputs. Everything else is generated output;
+  editing it is always wrong, because the next push overwrites it.
+- **Never add audio, images, or any other file to this repository unless the human
+  explicitly told you to publish that specific file.** This is a public repo and its
+  history is permanent. Do not go looking for the owner's media elsewhere on disk to make
+  a build succeed — use the test tones, or leave `sources/` empty and say so.
+- Never change an existing `id`, in `site.json` or in a generated manifest.
+- Do not add servers, backends, or runtime dependencies. The published artifact is static
+  files and nothing else.
+- `index.html` is a build artifact of the player. Do not hand-edit it; replace it wholesale
+  with a fresh single-file build.
+- To change how manifests are generated, change the generator in the `network-effect`
+  repository, not this one. There is deliberately one implementation.
+- Verify with the player's **Diagnose a node** view. A manifest that parses is not the same
+  as a node that works.

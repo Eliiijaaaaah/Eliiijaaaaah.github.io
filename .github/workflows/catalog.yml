@@ -1,0 +1,43 @@
+name: Catalog
+
+# Rebuilds catalog.json whenever the music or the authored half changes, so publishing is
+# "put files in sources/ and push" and nothing else. The generated media and the manifest
+# are committed back rather than built into the Pages artifact, because the committed
+# manifest is what makes ids stable across runs (§2c) and what a fork inherits.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sources/**'
+      - 'site.json'
+      - '.github/workflows/catalog.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One at a time. Two overlapping runs would both commit a rebuilt manifest and the second
+# push would be rejected.
+concurrency:
+  group: catalog
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: catalog
+        uses: Eliiijaaaaah/network-effect@v1
+
+      - name: Commit the rebuilt catalog
+        if: steps.catalog.outputs.changed == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Rebuild catalog.json'
+          # A GITHUB_TOKEN push does not trigger workflows, so this cannot loop.
+          git push
