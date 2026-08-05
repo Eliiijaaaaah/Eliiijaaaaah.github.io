@@ -12,69 +12,35 @@
   ],
   "collections": [
     {
-      "id": "urn:uuid:8a2b7c14-3e9d-4a6f-b105-2c8e91d7f430",
-      "title": "Header Measurements",
-      "date": "2026",
+      "id": "urn:uuid:2840a0b2-7fb9-4133-8d19-e856656005a9",
+      "title": "Test Tones",
       "art": {
-        "url": "media/cover.png",
+        "url": "media/Test Tones/cover.png",
         "mime": "image/png",
-        "size": 2802,
-        "sha256": "ea50cbcbd1c99dbff78279458045e4cd1861cbee3c49b59db03912e3c521afdb"
+        "size": 8744,
+        "sha256": "447c7eaa71f24c07d4486a7c7ac38433e646232aab025803011298fbba7e92ea"
       },
       "items": [
         {
           "n": 1,
-          "title": "probe.opus",
-          "duration": 4,
+          "title": "Test Tone",
+          "duration": 6,
           "preview": {
-            "url": "media/probe.opus",
+            "url": "media/Test Tones/01 Test Tone.opus",
             "mime": "audio/opus",
-            "size": 176444,
-            "sha256": "e1c2cb55a11258e65565aea4bb9e06a362a974705fc04dd37f863f0828defe38"
+            "size": 76571,
+            "sha256": "c5bcb28097ca453a2df4f1f8c6beddb74f4f0205c1be5a5b8b8a1ac78139ee1f"
           }
         },
         {
           "n": 2,
-          "title": "probe.flac",
-          "duration": 4,
+          "title": "Test Tone Higher",
+          "duration": 6,
           "preview": {
-            "url": "media/probe.flac",
-            "mime": "audio/flac",
-            "size": 176444,
-            "sha256": "e1c2cb55a11258e65565aea4bb9e06a362a974705fc04dd37f863f0828defe38"
-          }
-        },
-        {
-          "n": 3,
-          "title": "probe.wav",
-          "duration": 4,
-          "preview": {
-            "url": "media/probe.wav",
-            "mime": "audio/wav",
-            "size": 176444,
-            "sha256": "e1c2cb55a11258e65565aea4bb9e06a362a974705fc04dd37f863f0828defe38"
-          }
-        },
-        {
-          "n": 4,
-          "title": "probe.mp3",
-          "duration": 4,
-          "preview": {
-            "url": "media/probe.mp3",
-            "mime": "audio/mpeg",
-            "size": 176444,
-            "sha256": "e1c2cb55a11258e65565aea4bb9e06a362a974705fc04dd37f863f0828defe38"
-          }
-        },
-        {
-          "n": 5,
-          "title": "probe.ogg",
-          "duration": 4,
-          "preview": {
-            "url": "media/probe.ogg",
-            "mime": "audio/ogg",
-            "size": 176444,
-            "sha256": "e1c2cb55a11258e65565aea4bb9e06a362a974705fc04dd37f863f0828defe38"
+            "url": "media/Test Tones/02 Test Tone Higher.opus",
+            "mime": "audio/opus",
+            "size": 80929,
+            "sha256": "1aa4333f8ce31d7076aa079da5f62838b767a4cac4bf12c046dc012457e61b49"
           }
         }
       ]
